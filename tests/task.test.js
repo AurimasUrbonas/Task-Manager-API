@@ -203,3 +203,13 @@ test('Should fetch page of tasks', async () => {
     .expect(200);
   expect(response.body.length).toEqual(1);
 });
+
+test('Should upload task image', async () => {
+  await request(app)
+    .post(`/tasks/${taskOne._id}/image`)
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .attach('image', 'tests/fixtures/profile-pic.jpg')
+    .expect(200);
+  const task = await Task.findById(taskOne._id);
+  expect(task.image).toEqual(expect.any(Buffer));
+});
